@@ -1,2 +1,0 @@
-# iLostInoid.github.io
-awdawd
