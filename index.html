@@ -207,13 +207,6 @@
 
         @keyframes outputPulse { 0%, 100% { border-color: var(--neon-blue); } 50% { border-color: var(--neon-green); } }
 
-        .error-msg {
-            background-color: rgba(255, 0, 0, 0.2) !important;
-            border-color: #ff0000 !important;
-            color: #ff6666 !important;
-            animation: none;
-        }
-
         .copy-btn {
             width: 100%;
             margin-top: 15px;
@@ -305,7 +298,6 @@
     <script>
         let colorCount = 3;
         const API_URL = 'https://api.birdflop.com/api/v2/rgb';
-        const PROXY = 'https://cors.bridged.cc/';  // PROXY ESTABLE Y RÁPIDO
 
         function createParticle() {
             const p = document.createElement('div');
@@ -337,7 +329,7 @@
 
         async function generateGradient() {
             const output = document.getElementById('output');
-            output.textContent = 'Generando gradiente...';
+            output.textContent = 'Generando...';
             output.classList.remove('error-msg');
 
             const colors = Array.from(document.querySelectorAll('.color-input')).map(el => ({
@@ -359,17 +351,13 @@
                 colors: JSON.stringify(colors)
             });
 
-            const url = PROXY + API_URL + '?' + params;
-
             try {
-                const res = await fetch(url, {
-                    headers: { 'x-cors-api-key': 'temp_1234567890' } // Clave pública del proxy
-                });
+                const res = await fetch(API_URL + '?' + params);
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
-                output.textContent = data.output || '¡Gradiente listo!';
+                output.textContent = data.output || '¡Listo!';
             } catch (e) {
-                output.textContent = `Error: ${e.message}\n\nPrueba recargar o usa GitHub Pages.`;
+                output.textContent = `Error: ${e.message}`;
                 output.classList.add('error-msg');
             }
         }
@@ -378,12 +366,11 @@
             navigator.clipboard.writeText(document.getElementById('output').textContent).then(() => {
                 const btn = document.querySelector('.copy-btn');
                 const old = btn.textContent;
-                btn.textContent = '¡COPIADO!';
+                btn.textContent = 'COPIADO';
                 setTimeout(() => btn.textContent = old, 1500);
             });
         }
 
-        // Auto-update
         document.querySelectorAll('input').forEach(el => {
             el.addEventListener('input', generateGradient);
             el.addEventListener('change', generateGradient);
